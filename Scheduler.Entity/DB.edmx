@@ -1,0 +1,396 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SchedulerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Availability">
+          <Key>
+            <PropertyRef Name="AvailabilityId" />
+          </Key>
+          <Property Name="AvailabilityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="DayOfTheWeek" Type="int" Nullable="false" />
+          <Property Name="StartTime" Type="datetime" Nullable="false" />
+          <Property Name="EndTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="RoleDescription" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Shift">
+          <Key>
+            <PropertyRef Name="ShiftId" />
+          </Key>
+          <Property Name="ShiftId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DayOfTheWeek" Type="int" Nullable="false" />
+          <Property Name="StartTime" Type="datetime" Nullable="false" />
+          <Property Name="EndTime" Type="datetime" Nullable="false" />
+          <Property Name="RoleRequired" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserInfo">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="ManagerId" Type="int" />
+        </EntityType>
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeId" Type="varchar" MaxLength="1000" />
+          <Property Name="LastName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="1000" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Subscription">
+          <Key>
+            <PropertyRef Name="SubscriptionId" />
+          </Key>
+          <Property Name="SubscriptionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SubscriptionName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="SubscriptionDescription" Type="varchar" MaxLength="1000" />
+        </EntityType>
+        <Association Name="FK_Availability_Account">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Availability" Type="Self.Availability" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Availability">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shift_Roles">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Shift" Type="Self.Shift" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="Shift">
+              <PropertyRef Name="RoleRequired" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserInfo_Account">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserInfo">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserInfo_ManagerId_Recursive">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="0..1" />
+          <End Role="UserInfo1" Type="Self.UserInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserInfo1">
+              <PropertyRef Name="ManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserInfo_Roles">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="UserInfo">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SchedulerModelStoreContainer">
+          <EntitySet Name="Availability" EntityType="Self.Availability" Schema="SCHED" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="SCHED" store:Type="Tables" />
+          <EntitySet Name="Shift" EntityType="Self.Shift" Schema="SCHED" store:Type="Tables" />
+          <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="SCHED" store:Type="Tables" />
+          <EntitySet Name="Account" EntityType="Self.Account" Schema="USER" store:Type="Tables" />
+          <EntitySet Name="Subscription" EntityType="Self.Subscription" Schema="USER" store:Type="Tables" />
+          <AssociationSet Name="FK_Availability_Account" Association="Self.FK_Availability_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Availability" EntitySet="Availability" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shift_Roles" Association="Self.FK_Shift_Roles">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="Shift" EntitySet="Shift" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserInfo_Account" Association="Self.FK_UserInfo_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="UserInfo" EntitySet="UserInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserInfo_ManagerId_Recursive" Association="Self.FK_UserInfo_ManagerId_Recursive">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="UserInfo1" EntitySet="UserInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserInfo_Roles" Association="Self.FK_UserInfo_Roles">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserInfo" EntitySet="UserInfo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SchedulerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Availability">
+          <Key>
+            <PropertyRef Name="AvailabilityId" />
+          </Key>
+          <Property Name="AvailabilityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="DayOfTheWeek" Type="Int32" Nullable="false" />
+          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Account" Relationship="Self.FK_Availability_Account" FromRole="Availability" ToRole="Account" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RoleDescription" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Shifts" Relationship="Self.FK_Shift_Roles" FromRole="Role" ToRole="Shift" />
+          <NavigationProperty Name="UserInfoes" Relationship="Self.FK_UserInfo_Roles" FromRole="Role" ToRole="UserInfo" />
+        </EntityType>
+        <EntityType Name="Shift">
+          <Key>
+            <PropertyRef Name="ShiftId" />
+          </Key>
+          <Property Name="ShiftId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DayOfTheWeek" Type="Int32" Nullable="false" />
+          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RoleRequired" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_Shift_Roles" FromRole="Shift" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="UserInfo">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="ManagerId" Type="Int32" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_UserInfo_Roles" FromRole="UserInfo" ToRole="Role" />
+          <NavigationProperty Name="Account" Relationship="Self.FK_UserInfo_Account" FromRole="UserInfo" ToRole="Account" />
+          <NavigationProperty Name="UserInfo1" Relationship="Self.FK_UserInfo_ManagerId_Recursive" FromRole="UserInfo" ToRole="UserInfo1" />
+          <NavigationProperty Name="UserInfo2" Relationship="Self.FK_UserInfo_ManagerId_Recursive" FromRole="UserInfo1" ToRole="UserInfo" />
+        </EntityType>
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeId" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Availabilities" Relationship="Self.FK_Availability_Account" FromRole="Account" ToRole="Availability" />
+          <NavigationProperty Name="UserInfo" Relationship="Self.FK_UserInfo_Account" FromRole="Account" ToRole="UserInfo" />
+        </EntityType>
+        <EntityType Name="Subscription">
+          <Key>
+            <PropertyRef Name="SubscriptionId" />
+          </Key>
+          <Property Name="SubscriptionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SubscriptionName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SubscriptionDescription" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_Availability_Account">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Availability" Type="Self.Availability" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Availability">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Shift_Roles">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Shift" Type="Self.Shift" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="Shift">
+              <PropertyRef Name="RoleRequired" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserInfo_Roles">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="UserInfo">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserInfo_Account">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserInfo">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserInfo_ManagerId_Recursive">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="0..1" />
+          <End Role="UserInfo1" Type="Self.UserInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserInfo1">
+              <PropertyRef Name="ManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SchedulerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Availabilities" EntityType="Self.Availability" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Shifts" EntityType="Self.Shift" />
+          <EntitySet Name="UserInfoes" EntityType="Self.UserInfo" />
+          <EntitySet Name="Accounts" EntityType="Self.Account" />
+          <EntitySet Name="Subscriptions" EntityType="Self.Subscription" />
+          <AssociationSet Name="FK_Availability_Account" Association="Self.FK_Availability_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="Availability" EntitySet="Availabilities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shift_Roles" Association="Self.FK_Shift_Roles">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="Shift" EntitySet="Shifts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserInfo_Roles" Association="Self.FK_UserInfo_Roles">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="UserInfo" EntitySet="UserInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserInfo_Account" Association="Self.FK_UserInfo_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="UserInfo" EntitySet="UserInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserInfo_ManagerId_Recursive" Association="Self.FK_UserInfo_ManagerId_Recursive">
+            <End Role="UserInfo" EntitySet="UserInfoes" />
+            <End Role="UserInfo1" EntitySet="UserInfoes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SchedulerModelStoreContainer" CdmEntityContainer="SchedulerEntities">
+          <EntitySetMapping Name="Availabilities">
+            <EntityTypeMapping TypeName="SchedulerModel.Availability">
+              <MappingFragment StoreEntitySet="Availability">
+                <ScalarProperty Name="AvailabilityId" ColumnName="AvailabilityId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="DayOfTheWeek" ColumnName="DayOfTheWeek" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="SchedulerModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleDescription" ColumnName="RoleDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shifts">
+            <EntityTypeMapping TypeName="SchedulerModel.Shift">
+              <MappingFragment StoreEntitySet="Shift">
+                <ScalarProperty Name="ShiftId" ColumnName="ShiftId" />
+                <ScalarProperty Name="DayOfTheWeek" ColumnName="DayOfTheWeek" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="RoleRequired" ColumnName="RoleRequired" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserInfoes">
+            <EntityTypeMapping TypeName="SchedulerModel.UserInfo">
+              <MappingFragment StoreEntitySet="UserInfo">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="ManagerId" ColumnName="ManagerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Accounts">
+            <EntityTypeMapping TypeName="SchedulerModel.Account">
+              <MappingFragment StoreEntitySet="Account">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subscriptions">
+            <EntityTypeMapping TypeName="SchedulerModel.Subscription">
+              <MappingFragment StoreEntitySet="Subscription">
+                <ScalarProperty Name="SubscriptionId" ColumnName="SubscriptionId" />
+                <ScalarProperty Name="SubscriptionName" ColumnName="SubscriptionName" />
+                <ScalarProperty Name="SubscriptionDescription" ColumnName="SubscriptionDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
