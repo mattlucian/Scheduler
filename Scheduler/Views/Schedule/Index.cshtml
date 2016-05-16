@@ -11,4 +11,57 @@
 <script type="text/javascript" src="~/Scripts/Scheduler/Index.js"></script>
 
 
-<div id="calendar"></div>
+<!-- Calendar Widget -->
+<div id="cal">
+    <table>
+        <thead>
+            <tr>
+                <td class="left button" id="prevYear"> &lang; </td>
+                <td colspan="7" id="year1">2010</td>
+                <td colspan="0" id="year2" hidden="hidden"></td>
+                <td class="right button" id="nextYear"> &rang; </td>
+            </tr>
+            <tr>
+                <td class="left button" id="prevMonth"> &lang; </td>
+                <td colspan="7" id="month1">June</td>
+                <td colspan="0" id="month2" hidden="hidden"></td>
+                <td class="right button" id="nextMonth"> &rang; </td>
+            </tr>
+            <tr id="day">
+                <td class="left button" id="prevWeek"> &lang; </td>
+                <td>sun</td>
+                <td>mon</td>
+                <td>tue</td>
+                <td>wed</td>
+                <td>thu</td>
+                <td>fri</td>
+                <td>sat</td>
+                <td class="right button" id="nextWeek"> &rang; </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="curr">
+                <td class="nil"></td>
+                <td id="day1">1</td>
+                <td id="day2">2</td>
+                <td id="day3">3</td>
+                <td id="day4">4</td>
+                <td id="day5">5</td>
+                <td id="day6">6</td>
+                <td id="day7">7</td>
+                <td class="nil"></td>
+            </tr>
+            <tr>
+                <td class="nil" id="times"></td>
+                <td class="activities"></td>
+                <td class="activities"></td>
+                <td class="activities"></td>
+                <td class="activities"></td>
+                <td class="activities"></td>
+                <td class="activities"></td>
+                <td class="activities"></td>
+                <td class="nil"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

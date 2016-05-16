@@ -1,2 +1,92 @@
-﻿
+﻿body {
+	background: #e0e0e0;
+}
+#cal {
+	margin:50px auto;
+	font: 13px/1.5 "Helvetica Neue", Helvetica, Arial, san-serif;
+	display:table;
+	box-shadow:0px 3px 3px rgba(0, 0, 0, 0.25);
+	-moz-box-shadow:0px 3px 3px rgba(0, 0, 0, 0.25);
+	-webkit-box-shadow:0px 3px 3px rgba(0, 0, 0, 0.25);
+}
 
+
+.button {
+	text-align:center;
+}
+.button:hover {
+	background: -moz-linear-gradient(top, #92D600, #76AD00);
+	background: -webkit-gradient(linear, left top, left bottom, from(#92D600), to(#76AD00));
+}
+
+#cal table {
+	background:#fff;
+	border-collapse: collapse;
+}
+#cal td {
+	color:#2d2d2d;
+	width:100px;
+	height:30px;
+	line-height:30px;
+	text-align:center;
+	border:1px solid #e6e6e6;
+	border-right:1px solid #868686;
+	border-left:1px solid #868686;
+	cursor:default;
+}
+
+#cal #day td {
+	height:26px;
+	line-height:26px;
+	text-transform:uppercase;
+	font-size:90%;
+	color:#9e9e9e;
+}
+#cal #days td:not(:last-child) {
+	border-right:1px solid #fff;
+}
+
+#cal #cal-frame td.today {
+	background:#ededed;
+	color:#8c8c8c8;
+	box-shadow:1px 1px 0px #fff inset;
+	-moz-box-shadow:1px 1px 0px #fff inset;
+	-webkit-box-shadow:1px 1px 0px #fff inset;
+}
+
+#cal #cal-frame td:not(.nil):hover {
+	color:#fff;
+	text-shadow:#6c1a07 0px -1px;
+	background:#cd310d;
+	background: -moz-linear-gradient(top, #92D600, #76AD00);
+	background: -webkit-gradient(linear, left top, left bottom, from(#92D600), to(#76AD00));
+	box-shadow:0px 0px 0px;
+	-moz-box-shadow:0px 0px 0px;
+	-webkit-box-shadow:0px 0px 0px;
+}
+#cal #cal-frame td span {
+	font-size:80%;
+	position:relative;
+}
+
+#cal table tbody tr .activities {
+	height:300px;
+}
+
+
+.activities{
+	padding:0;
+}
+.minutes{
+	padding:0;
+	margin:0;
+	color:#868686;
+	font-size:smaller;
+	height:30px;
+}
+#cal table tbody tr td div{
+	border-bottom: 1px solid #e6e6e6;
+}
+.selected{
+	background-color:#5e5e5e;
+}
